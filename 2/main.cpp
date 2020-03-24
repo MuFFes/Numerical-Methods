@@ -56,15 +56,17 @@ int main()
         result        = function(x);
         absoluteError = fabs(exactValue - result);
 
+        // Fragment od tego miejsca ...
         if (absoluteError > numeric_limits<double>::epsilon())
         {
             result        = taylorSeries(x);
             absoluteError = fabs(exactValue - result);
         }
+        // ... do tego - trzeba zakomentować żeby dostać pierwszy wykres
         
         relativeError = fabs(absoluteError / exactValue);
 
-        f_out << x << " " << relativeError << endl;
+        f_out << log << " " << log10(relativeError) << endl;
 
         cout << setw(27) << x;
         cout << setw(27) << exactValue;
@@ -76,6 +78,6 @@ int main()
 
     f_in.close();
     f_out.close();
-    system("gnuplot -p -e \"set ylabel 'log(fabs(relativeError))'; set xlabel 'log(x)'; set logscale xy; plot 2.22045e-16, 'out.txt'\"");
+    system("gnuplot -p -e \"set ylabel 'log(fabs(relativeError))'; set xlabel 'log(x)'; plot -15.6535590018, 'out.txt'\"");
     return 0;
 }
