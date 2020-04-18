@@ -26,27 +26,8 @@ void print_vector(double v[ARR_SIZE]) {
     cout << "]" << endl;
 }
 
-int main()
-{
-    cout << fixed;
-    cout << setprecision(3);
 
-    double A[ARR_SIZE][ARR_SIZE] = {
-        {  1.0,  -20.0,   30.0,  -4.0},
-        {  2.0,  -40.0,   -6.0,  50.0},
-        {  9.0, -180.0,   11.0, -12.0},
-        {-16.0,   15.0, -140.0,  13.0}
-    };
-
-    double b[ARR_SIZE] = {35.0, 104.0, -366.0, -354.0};
-    
-    double L[ARR_SIZE][ARR_SIZE] = {
-        { 1.0,  0.0,  0.0,  0.0},
-        { 0.0,  1.0,  0.0,  0.0},
-        { 0.0,  0.0,  1.0,  0.0}, 
-        { 0.0,  0.0,  0.0,  1.0}
-    };
-
+void decomposition(double A[ARR_SIZE][ARR_SIZE], double L[ARR_SIZE][ARR_SIZE], double b[ARR_SIZE]) {
     for (int i = 0; i < ARR_SIZE; i++) {
         // Częściowy wybór elementu podstawowego
         if (A[i][i] == 0.0) {
@@ -75,6 +56,53 @@ int main()
             }
         }
     }
+}
+
+void calculate_y(double L[ARR_SIZE][ARR_SIZE], double b[ARR_SIZE], double y[ARR_SIZE]) {
+    for (int i = 0; i < ARR_SIZE; i++) {
+        for (int j = 0; j <= i; j++) {
+            if (i == j)
+                y[i] += b[i];
+            else
+                y[i] -= L[i][j] * y[j];
+        }
+    }
+}
+
+
+void calculate_x(double A[ARR_SIZE][ARR_SIZE], double y[ARR_SIZE], double x[ARR_SIZE]) {
+    for (int i = ARR_SIZE - 1; i >= 0; i--) {
+        for (int j = i; j < ARR_SIZE; j++) {
+            if (i == j)
+                x[i] += y[i] / A[i][i];
+            else
+                x[i] -= A[i][j] * x[j] / A[i][i];
+        }
+    }
+}
+
+int main()
+{
+    cout << fixed;
+    cout << setprecision(3);
+
+    double A[ARR_SIZE][ARR_SIZE] = {
+        {  1.0,  -20.0,   30.0,  -4.0},
+        {  2.0,  -40.0,   -6.0,  50.0},
+        {  9.0, -180.0,   11.0, -12.0},
+        {-16.0,   15.0, -140.0,  13.0}
+    };
+
+    double b[ARR_SIZE] = {35.0, 104.0, -366.0, -354.0};
+    
+    double L[ARR_SIZE][ARR_SIZE] = {
+        { 1.0,  0.0,  0.0,  0.0},
+        { 0.0,  1.0,  0.0,  0.0},
+        { 0.0,  0.0,  1.0,  0.0}, 
+        { 0.0,  0.0,  0.0,  1.0}
+    };
+
+    decomposition(A, L, b);
     cout << " U : " << endl;
     print_array(A);
     cout << " L : " << endl;
@@ -91,26 +119,12 @@ int main()
     cout << "b = ";
     print_vector(b);
     // Obliczenie wartości wektora y
-    for (int i = 0; i < ARR_SIZE; i++) {
-        for (int j = 0; j <= i; j++) {
-            if (i == j)
-                y[i] += b[i];
-            else
-                y[i] -= L[i][j] * y[j];
-        }
-    }
+    calculate_y(L, b, y);
     // Wyświetlenie wartości wektora y
     cout << "y = ";
     print_vector(y);
     // Obliczenie wartości wektora x
-    for (int i = ARR_SIZE - 1; i >= 0; i--) {
-        for (int j = i; j < ARR_SIZE; j++) {
-            if (i == j)
-                x[i] += y[i] / A[i][i];
-            else
-                x[i] -= A[i][j] * x[j] / A[i][i];
-        }
-    }
+    calculate_x(A, y, x);
     // Wyświetlenie wartości wektora x
     cout << "x = ";
     print_vector(x);
