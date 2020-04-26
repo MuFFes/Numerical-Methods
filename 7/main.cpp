@@ -10,15 +10,6 @@
 
 using namespace std;
 
-void print_matrix(double A[ARR_SIZE][ARR_SIZE]) {
-    for (int i = 0; i < ARR_SIZE; i++) {
-        for (int j = 0; j < ARR_SIZE; j++) {
-            cout << A[i][j] << " \t";
-        }
-        cout << endl;
-    }
-}
-
 void print_vector(double b[ARR_SIZE], const char* name = "x") {
     cout << "\t" << name << " = [";
     for (int i = 0; i < ARR_SIZE; i++)
@@ -38,7 +29,7 @@ double maximum_norm(double p[ARR_SIZE]) {
 double *residuum(double A[ARR_SIZE][ARR_SIZE], double x[ARR_SIZE], double b[ARR_SIZE]) {
     double *res = new double[ARR_SIZE];
     for (int i = 0; i < ARR_SIZE; i++) {
-        double sum = 0;
+        double sum = 0.0;
         for (int j = 0; j < ARR_SIZE; j++) {
             sum += A[i][j] * x[j];
         }
@@ -50,20 +41,20 @@ double *residuum(double A[ARR_SIZE][ARR_SIZE], double x[ARR_SIZE], double b[ARR_
 void print_info(int iteration, double A[ARR_SIZE][ARR_SIZE], double prev_x[ARR_SIZE], double x[ARR_SIZE], double b[ARR_SIZE]) {
     cout << iteration << " iteracja:" << endl;
     print_vector(x);
-    cout << "\tWartosc normy maksimum wektora residualnego: " << fabs(maximum_norm(residuum(A, x, b)))     << endl;
-    cout << "\tWartosc normy z przyblizen pierwiastkow: "     << fabs((maximum_norm(x) - maximum_norm(prev_x))) << endl;
+    cout << "\tWartosc normy maksimum wektora residualnego: "      << fabs(maximum_norm(residuum(A, x, b)))          << endl;
+    cout << "\tWartosc normy maksimum z przyblizen pierwiastkow: " << fabs((maximum_norm(x) - maximum_norm(prev_x))) << endl;
 }
 
 void jacobi(double A[ARR_SIZE][ARR_SIZE], double prev_x[ARR_SIZE], double x[ARR_SIZE], double b[ARR_SIZE]) {
     for (int iteration = 1; iteration <= MAX_ITERATIONS; iteration++) {
         swap(x, prev_x);
         for (int i = 0; i < ARR_SIZE; i++) {
-            double sigma = 0;
+            double t = 0;
             for (int j = 0; j < ARR_SIZE; j++) {
                 if (j != i)
-                    sigma += A[i][j] * prev_x[j];
+                    t += A[i][j] * prev_x[j];
             }
-            x[i] = (b[i] - sigma) / A[i][i];
+            x[i] = (b[i] - t) / A[i][i];
         }
         print_info(iteration, A, prev_x, x, b);
 
@@ -78,18 +69,18 @@ void gauss_seidel(double A[ARR_SIZE][ARR_SIZE], double prev_x[ARR_SIZE], double 
 {
     for (int iteration = 1; iteration <= MAX_ITERATIONS; iteration++) {
         for (int i = 0; i < ARR_SIZE; i++) {
-            double sigma = 0;
+            double t = 0.0;
             prev_x[i] = x[i];
 
             for (int j = 0; j <= i - 1; j++) {
-                sigma += A[i][j] * x[j];
+                t += A[i][j] * x[j];
             }
 
             for (int j = i + 1; j < ARR_SIZE; j++) {
-                sigma += A[i][j] * x[j];
+                t += A[i][j] * x[j];
             }
 
-            x[i] = (b[i] - sigma) / A[i][i];
+            x[i] = (b[i] - t) / A[i][i];
         }
         print_info(iteration, A, prev_x, x, b);
 
@@ -104,19 +95,19 @@ void sor(double A[ARR_SIZE][ARR_SIZE], double prev_x[ARR_SIZE], double x[ARR_SIZ
 {
     for (int iteration = 1; iteration <= MAX_ITERATIONS; iteration++) {
         for (int i = 0; i < ARR_SIZE; i++) {
-            double sigma = 0;
+            double t = 0;
             prev_x[i] = x[i];
             
             for (int j = 0; j <= i - 1; j++)
-                sigma += A[i][j] * x[j];
+                t += A[i][j] * x[j];
             
             for (int j = i; j < ARR_SIZE; j++) {
                 if (j == i)
-                    sigma += (1 - (1.0 / OMEGA)) * A[i][i] * x[j];
+                    t += (1 - (1.0 / OMEGA)) * A[i][i] * x[j];
                 else
-                    sigma += A[i][j] * x[j];
+                    t += A[i][j] * x[j];
             }
-            x[i] = (b[i] - sigma) / A[i][i] * OMEGA;
+            x[i] = (b[i] - t) / A[i][i] * OMEGA;
         }
         print_info(iteration, A, prev_x, x, b);
 

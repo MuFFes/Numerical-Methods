@@ -1,0 +1,20 @@
+Rzędy dokładności dla rodzajów przybliżeń (z wykresów):
+progresywny dwupunktowy dla x=0:    2 (rozbieżność z wartością teoretyczną - 1)
+progresywny dwupunktowy dla x=PI/4: 1
+progresywny trzypunktowy dla x=0:   2
+centralny dwupunktowy dla x=PI/4:   2
+wsteczny dwupunktowy dla x=PI/2:    1
+wsteczny dwupunktowy dla x=PI/4:    1
+wsteczny trzypunktowy dla x=PI/2:   3 (rozbieżność z wartością teoretyczną - 2)
+
+
+Powodem powyżej przedstawionych różnic pomiędzy rzędami wielkości teoretycznym a odczytanym z wykresu jest zerowanie się pochodnych.
+W przypadku gdy pochodna przy najbardziej znaczącym wyrazie błędu odcięcia zeruje się, a kolejna jest niezerowa, to rząd wielkości zwiększa się. 
+W przybliżeniu progresywnym dwupunktowym dla x=0 wartość drugiej pochodnej to -sin(0) = 0
+W przybliżeniu wstecznym trzypunktowym dla x=PI/2 wartość drugiej pochodnej to -cos(PI/2) = 0 
+
+Wartości kroków poniżej których pojawia się wpływ błędów maszynowych to:
+dla typu float:
+h <= 1e-4
+dla typu double:
+h <= 1e-7
