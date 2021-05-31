@@ -1,0 +1,2 @@
+Na wykresie możemy zauważyć, że wyniki interpolacji wielomianowej na węzłach równoodległych mocno odbiegają od wartości funkcji na końcach przedziału. 
+Zwiększając liczbę węzłów możemy zauważyć, że różnica między wartościami funkcji, a interpolacji wielomianowej na węzłach równoodległych wzrasta.
